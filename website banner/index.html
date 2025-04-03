@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slide Banner</title>
+    <style>
+        .slide {
+            display: none;
+            width: 100%;
+            height: 300px; 
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            color: #fff;
+            position: relative;
+        }
+        .slide .slide-content {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="banner"></div>
+
+    <script>
+        // JavaScript to fetch slides and create banner
+        async function fetchSlides() {
+            try {
+                const response = await fetch('get_slides.php');
+                const slides = await response.json();
+                return slides;
+            } catch (error) {
+                console.error('Error fetching slides:', error);
+                return [];
+            }
+        }
+
+        async function createSlideBanner() {
+            const slides = await fetchSlides();
+            const banner = document.getElementById('banner');
+
+            if (slides.length === 0) {
+                banner.innerHTML = '<p>No slides found.</p>';
+                return;
+            }
+
+            slides.forEach((slide, index) => {
+                const slideElement = document.createElement('div');
+                slideElement.classList.add('slide');
+                slideElement.style.backgroundImage = `url(${slide.image_url})`;
+
+                const slideContent = document.createElement('div');
+                slideContent.classList.add('slide-content');
+                slideContent.innerHTML = `<h2>${slide.title}</h2>`;
+                if (slide.link_url) {
+                    const link = document.createElement('a');
+                    link.href = slide.link_url;
+                    link.textContent = 'Read more';
+                    slideContent.appendChild(link);
+                }
+
+                slideElement.appendChild(slideContent);
+                banner.appendChild(slideElement);
+
+                if (index === 0) {
+                    slideElement.style.display = 'block';
+                }
+            });
+
+            let slideIndex = 0;
+            setInterval(() => {
+                const currentSlide = banner.querySelector('.slide:nth-child(' + (slideIndex + 1) + ')');
+                const nextSlideIndex = (slideIndex + 1) % slides.length;
+                const nextSlide = banner.querySelector('.slide:nth-child(' + (nextSlideIndex + 1) + ')');
+
+                currentSlide.style.display = 'none';
+                nextSlide.style.display = 'block';
+
+                slideIndex = nextSlideIndex;
+            }, 5000); // Adjust slide duration (in milliseconds) as needed
+        }
+
+        createSlideBanner();
+    </script>
+</body>
+</html>

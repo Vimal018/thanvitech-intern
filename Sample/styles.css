@@ -1,0 +1,32 @@
+.image-zoom-container {
+    width: 500px;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-zoom {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.zoom-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-zoom-container:hover .image-zoom {
+    transform: scale(1.2);
+}
+
+.image-zoom-container:hover .zoom-overlay {
+    opacity: 1;
+}
