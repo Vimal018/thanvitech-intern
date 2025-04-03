@@ -1,6 +1,3 @@
-Here’s a README file for your Thanvi Tech internship project:  
-
----
 
 # Thanvi Tech Internship Project  
 
